@@ -1,6 +1,7 @@
-import { KeyboardAvoidingView, Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
+import { Alert, KeyboardAvoidingView, Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react'
+import axios from 'axios';
 
 const RegisterScreen = () => {
   const [email, setEmail] = useState("");
@@ -8,6 +9,32 @@ const RegisterScreen = () => {
   const [image, setImage] = useState("");
   const [name, setName] = useState("");
   const navigation = useNavigation();
+  const handleRegister = () => {
+    const user = {
+      name: name,
+      email: email,
+      password: password,
+      image: image,
+    }
+
+    axios.post("http://localhost:8000/register", user).then((respone) => {
+      console.log(respone);
+      Alert.alert(
+        "Registration successfull",
+        "You have been registered successfully"
+      );
+      setName("");
+      setEmail("");
+      setPassword("");
+      setImage("");
+    }).catch((error) => {
+      Alert.alert(
+        "Registration error",
+        "An error occurred while registering"
+      );
+      console.log("Registration failed", error);
+    })
+  }
   return (
     <View style={styles.container}>
       <KeyboardAvoidingView>
@@ -57,7 +84,9 @@ const RegisterScreen = () => {
               value={image} />
           </View>
 
-          <Pressable style={styles.btnLogin}>
+          <Pressable
+            onPress={handleRegister}
+            style={styles.btnLogin}>
             <Text style={styles.textLogin}>Register</Text>
           </Pressable>
 
