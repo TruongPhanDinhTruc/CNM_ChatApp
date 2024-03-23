@@ -7,6 +7,7 @@ const localStrategy = require('passport-local').Strategy;
 
 const app = express();
 const port = 8000;
+const secretKey = "g!cUnGDu0C"
 const cors = require('cors');
 app.use(cors());
 
@@ -50,13 +51,14 @@ app.post("/register", (req, res)=>{
 });
 
 //Tao token cho user
-// const createToken = (userId) => {
-//     const payload = {
-//         userId: userId,
-//     };
+const createToken = (userId) => {
+    const payload = {
+        userId: userId,
+    };
+    const token = jwt.sign(payload, secretKey, { expiresIn: '1h' });
 
-
-// }
+    return token;
+}
 
 //Dang nhap
 app.post("./login", (req, res) => {
